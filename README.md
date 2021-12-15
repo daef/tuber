@@ -25,12 +25,12 @@ first you have to build the image (once)
 
 then you can use the image to download analysis 1 to /tmp
 
-     docker run --rm -v /tmp:/data -e USER=your_user -e PASS=your_pass -e COURSE=4636c0b6-71a8-45f1-bc6a-ea850f46175e tuber
+    docker run --rm -v /tmp:/data -e USER=your_user -e PASS=your_pass -e COURSE=4636c0b6-71a8-45f1-bc6a-ea850f46175e tuber
 
 ### example without docker
 
 to download analysis 1 to the current directory
 
-USER=your_user PASS=your_pass COURSE=4636c0b6-71a8-45f1-bc6a-ea850f46175e /path/to/tuber.sh
+    USER=your_user PASS=your_pass COURSE=4636c0b6-71a8-45f1-bc6a-ea850f46175e /path/to/tuber.sh
 
 
