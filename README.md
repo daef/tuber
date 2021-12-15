@@ -34,4 +34,4 @@ to download analysis 1 to the current directory
 
 to download analysis 1 to the current directory run
 
-    USER=your_user PASS=your_pass COURSE=4636c0b6-71a8-45f1-bc6a-ea850f46175e nix shell github:daef/tuber# -c tuber
+    USER=your_user PASS=your_pass COURSE=4636c0b6-71a8-45f1-bc6a-ea850f46175e nix run github:daef/tuber
