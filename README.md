@@ -19,13 +19,9 @@ tuber expects some environment variables:
 
 ### example using docker
 
-first you have to build the image (once)
+you can use the prebuilt image from dockerhub to download analysis 1 to /tmp
 
-    docker build -t tuber .
-
-then you can use the image to download analysis 1 to /tmp
-
-    docker run --rm -v /tmp:/data -e USER=your_user -e PASS=your_pass -e COURSE=4636c0b6-71a8-45f1-bc6a-ea850f46175e tuber
+    docker run --rm -v /tmp:/data -e USER=your_user -e PASS=your_pass -e COURSE=4636c0b6-71a8-45f1-bc6a-ea850f46175e daef/tuber
 
 ### example without docker
 
