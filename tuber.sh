@@ -23,7 +23,7 @@ if [[ ! $RESPONSE =~ "Welcome to TU Graz TUbe" ]] ; then
 fi
 echo logged in
 
-for episode in $($CURL_STDOUT "$EPIURL" | jq -c "
+$CURL_STDOUT "$EPIURL" | jq -c "
 	.[\"search-results\"]
 	.result[]
 	.mediapackage
@@ -32,11 +32,12 @@ for episode in $($CURL_STDOUT "$EPIURL" | jq -c "
 		urls: [ .media.track[]
 			| select(.video.resolution == \"$RESOLUTION\")
 			| .url]
-	}")
+	}" |
+		while read episode
 do
-	TITLE="$(echo $episode | jq -r .title)"
-	FN="$(echo $TITLE | tr -dc 'a-zA-Z0-9' ).mp4"
-	URL="$(echo $episode | jq -r .urls[0])"
+	TITLE="$(echo "$episode" | jq -r .title)"
+	FN="$(echo "$TITLE" | tr -dc 'a-zA-Z0-9' ).mp4"
+	URL="$(echo "$episode" | jq -r .urls[0])"
 	if [ ! -f "$FN" ] ; then
 		echo "downloading $TITLE to $FN"
 		$CURL -C - -o "$FN.part" "$URL"
