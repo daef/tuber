@@ -4,6 +4,7 @@
 : "${PASS:=pass}"
 : "${COURSE:=4636c0b6-71a8-45f1-bc6a-ea850f46175e}"
 : "${RESOLUTION:=1920x1080}"
+: "${FALLBACKRES:=1440x900}"
 
 CURL="curl -L -c cookies -b cookies"
 CURL_STDOUT="$CURL -s -o -"
@@ -22,8 +23,9 @@ if [[ ! $RESPONSE =~ "Welcome to TU Graz TUbe" ]] ; then
 	fi
 fi
 echo logged in
-
-$CURL_STDOUT "$EPIURL" | jq -c "
+echo $EPIURL
+$CURL -s -o episodes.json "$EPIURL"
+cat episodes.json | jq -c "
 	.[\"search-results\"]
 	.result[]
 	.mediapackage
@@ -38,6 +40,32 @@ do
 	TITLE="$(echo "$episode" | jq -r .title)"
 	FN="$(echo "$TITLE" | tr -dc 'a-zA-Z0-9' ).mp4"
 	URL="$(echo "$episode" | jq -r .urls[0])"
+  echo episodeurl $URL
+  if [ "$URL" != "null" ] ; then
+    if [ ! -f "$FN" ] ; then
+      echo "downloading $TITLE to $FN"
+      $CURL -C - -o "$FN.part" "$URL"
+      mv "$FN"{.part,}
+    fi
+  fi
+done
+
+cat episodes.json | jq -c "
+	.[\"search-results\"]
+	.result[]
+	.mediapackage
+	| {
+		title: .title,
+		urls: [ .media.track[]
+			| select(.video.resolution == \"$FALLBACKRES\")
+			| .url]
+	}" |
+		while read episode
+do
+	TITLE="$(echo "$episode" | jq -r .title)"
+	FN="$(echo "$TITLE" | tr -dc 'a-zA-Z0-9' ).mp4"
+	URL="$(echo "$episode" | jq -r .urls[0])"
+  echo fallback episodeurl $URL
 	if [ ! -f "$FN" ] ; then
 		echo "downloading $TITLE to $FN"
 		$CURL -C - -o "$FN.part" "$URL"
