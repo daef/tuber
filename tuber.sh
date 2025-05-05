@@ -10,7 +10,7 @@ CURL="curl -L -c cookies -b cookies"
 CURL_STDOUT="$CURL -s -o -"
 TUBE="https://tube.tugraz.at"
 INITURL="$TUBE/Shibboleth.sso/Login?target=/paella/ui/index.html"
-EPIURL="$TUBE/search/episode.json?sid=$COURSE"
+EPIURL="$TUBE/search/episode.json?limit=2000&offset=0&sid=$COURSE"
 
 RESPONSE=$($CURL_STDOUT -L -c cookies -b cookies -s -o - ${INITURL})
 if [[ ! $RESPONSE =~ "Welcome to TU Graz TUbe" ]] ; then
